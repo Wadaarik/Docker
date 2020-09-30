@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+  apache:
+    container_name: iim-apache #nom de la machine
+    hostname: iim-apache #nom de la machine pour le dialogue
+    build: ./containers/apache #
+    ports:
+      - '80:80' #à gauche -> localhost, à droite le containers
+      - '443:443'
+    networks:
+      - iim-lamp
+    volumes:
+      - './src/:/usr/local/apache2/htdocs'
+      - './config/:/usr/local/apache2/conf/extra'
+  php:
+    container_name: iim_php
+    hostname: iim_php
+    build: ./containers/php
+    networks:
+       - iim-lamp
+    volumes:
+       - './src/:/var/www/html'
+  mysql:
+    container_name: iim_mysql
+    hostname: iim_mysql
+    build: ./containers/php
+    ports:
+        - '3306:3306:80'
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - iim-lamp
+
+networks:
+  iim-lamp:
